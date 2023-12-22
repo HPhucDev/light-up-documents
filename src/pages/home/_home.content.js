@@ -66,13 +66,10 @@ export default {
       linksIconColor: "green",
       links: [
         {
-          label: "Installation guides",
-          to: "/dev-docs/installation",
+          label: "Intro guides",
+          to: "/dev-docs/intro",
         },
-        {
-          label: "Database configuration",
-          to: "/dev-docs/configurations/database",
-        },
+
         {
           label: "REST API",
           to: "/dev-docs/api/rest",
@@ -81,44 +78,6 @@ export default {
           label: "GraphQL API",
           to: "/dev-docs/api/graphql",
         },
-        {
-          label: "Back-end customization",
-          to: "/dev-docs/backend-customization",
-        },
-      ],
-    },
-    {
-      cardLink: "/user-docs/intro",
-      cardTitle: "User Guide",
-      cardDescription:
-        "Get the most out of the admin panel with our user guide",
-      cardImgSrc:
-        require("@site/static/img/assets/home/preview--user-guides.jpg")
-          .default,
-      linksIconSrc: require("@site/static/img/assets/icons/feather.svg")
-        .default,
-      linksIconColor: "blue",
-      links: [
-        {
-          label: "Getting started in the admin panel",
-          to: "/user-docs/intro#accessing-the-admin-panel",
-        },
-        {
-          label: "Creating content-types",
-          to: "/user-docs/content-type-builder/creating-new-content-type",
-        },
-        {
-          label: "Configuring content-types fields",
-          to: "/user-docs/content-type-builder/configuring-fields-content-type",
-        },
-        {
-          label: "Writing content",
-          to: "/user-docs/content-manager/writing-content",
-        },
-        {
-          label: "Setting up the admin panel",
-          to: "/user-docs/settings/admin-panel",
-        },
       ],
     },
   ],
@@ -126,6 +85,6 @@ export default {
   /** Help us to improve the documentation */
   huitd: {
     label: "Help us improve the documentation",
-    href: "https://github.com/strapi/documentation",
+    href: "https://github.com/HPhucDev/light-up-documents",
   },
 };

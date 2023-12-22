@@ -2,7 +2,7 @@
 title: Populate and Select
 description: Use Strapi's REST API to populate or select certain fields.
 sidebarDepth: 3
-displayed_sidebar: restApiSidebar
+# displayed_sidebar: restApiSidebar
 ---
 
 import QsIntroFull from '/docs/snippets/qs-intro-full.md'
@@ -75,10 +75,10 @@ By default, fields are selected except relations, media, dynamic zones, and comp
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
-    fields: ['title', 'body'],
+    fields: ["title", "body"],
   },
   {
     encodeValuesOnly: true, // prettify URL
@@ -92,7 +92,6 @@ await request(`/api/users?${query}`);
 
 </SideBySideColumn>
 </SideBySideContainer>
-
 
 ## Population
 
@@ -186,10 +185,10 @@ To populate one-level deep for all relations, use the `*` wildcard in combinatio
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
-    populate: '*',
+    populate: "*",
   },
   {
     encodeValuesOnly: true, // prettify URL
@@ -265,10 +264,10 @@ To populate only specific relations one-level deep, use one of the following met
 
 ```js
 // Array method
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
-    populate: ['categories'],
+    populate: ["categories"],
   },
   {
     encodeValuesOnly: true, // prettify URL
@@ -279,15 +278,15 @@ await request(`/api/articles?${query}`);
 
 ```js
 // Object method
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
     populate: {
-      categories: true
-    }
+      categories: true,
+    },
   },
   {
-    encodeValuesOnly: true // prettify URL
+    encodeValuesOnly: true, // prettify URL
   }
 );
 
@@ -369,12 +368,12 @@ There is no limit on the number of levels that can be populated. However, the mo
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
     populate: {
       author: {
-        populate: ['company'],
+        populate: ["company"],
       },
     },
   },
@@ -469,14 +468,10 @@ The easiest way to build complex queries with multiple-level population is to us
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
-    populate: [
-      'seoData',
-      'seoData.sharedImage',
-      'seoData.sharedImage.media',
-    ],
+    populate: ["seoData", "seoData.sharedImage", "seoData.sharedImage.media"],
   },
   {
     encodeValuesOnly: true, // prettify URL
@@ -530,7 +525,7 @@ In a shared population strategy, apply a unique behavior for all the dynamic zon
             "testNestedCompo": {
               "id": 3,
               "testNestedString": "testNested1"
-                        },
+            },
             "otherField": "test"
           },
           {
@@ -558,12 +553,12 @@ In a shared population strategy, apply a unique behavior for all the dynamic zon
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
     populate: {
       testDZ: {
-        populate: '*',
+        populate: "*",
       },
     },
   },
@@ -639,18 +634,18 @@ With the detailed population strategy, define per-component populate queries usi
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
     populate: {
       testDz: {
         on: {
-          'test.test-compo': {
-            fields: ['testString'],
-            populate: '*',
+          "test.test-compo": {
+            fields: ["testString"],
+            populate: "*",
           },
-          'test.test-compo2': {
-            fields: ['testInt'],
+          "test.test-compo2": {
+            fields: ["testInt"],
           },
         },
       },
@@ -678,35 +673,37 @@ To add `createdBy` and `updatedBy` to the API response:
 1. Open the content-type `schema.json` file.
 2. Add `"populateCreatorFields": true` to the `options` object:
 
-  ```json
-  "options": {
-      "draftAndPublish": true,
-      "populateCreatorFields": true
-    },
-  ```
+```json
+"options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true
+  },
+```
 
 3. Save the `schema.json`.
 4. Open the controller `[collection-name].js` file inside the corresponding API request.
 5. Add the following piece of code, and make sure you replace the `[collection-name].js` with proper collection name:
 
-  ```js
-  'use strict';
-  /**
-   *  [collection-name] controller
-   */
-  const { createCoreController } = require('@strapi/strapi').factories;
-  module.exports = createCoreController('api::[collection-name].[collection-name]', ({ strapi }) => ({
+```js
+"use strict";
+/**
+ *  [collection-name] controller
+ */
+const { createCoreController } = require("@strapi/strapi").factories;
+module.exports = createCoreController(
+  "api::[collection-name].[collection-name]",
+  ({ strapi }) => ({
     async find(ctx) {
       // Calling the default core action
       const { data, meta } = await super.find(ctx);
-      const query = strapi.db.query('api::[collection-name].[collection-name]');
+      const query = strapi.db.query("api::[collection-name].[collection-name]");
       await Promise.all(
         data.map(async (item, index) => {
           const foundItem = await query.findOne({
             where: {
               id: item.id,
             },
-            populate: ['createdBy', 'updatedBy'],
+            populate: ["createdBy", "updatedBy"],
           });
 
           data[index].attributes.createdBy = {
@@ -723,8 +720,9 @@ To add `createdBy` and `updatedBy` to the API response:
       );
       return { data, meta };
     },
-  }));
-  ```
+  })
+);
+```
 
 REST API requests using the `populate` parameter that include the `createdBy` or `updatedBy` fields will now populate these fields.
 
@@ -797,13 +795,13 @@ The population and pagination operators cannot be combined.
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
-    fields: ['title', 'slug'],
+    fields: ["title", "slug"],
     populate: {
       headerImage: {
-        fields: ['name', 'url'],
+        fields: ["name", "url"],
       },
     },
   },
@@ -878,15 +876,15 @@ await request(`/api/articles?${query}`);
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
+const qs = require("qs");
 const query = qs.stringify(
   {
     populate: {
       categories: {
-        sort: ['name:asc'],
+        sort: ["name:asc"],
         filters: {
           name: {
-            $eq: 'Cars',
+            $eq: "Cars",
           },
         },
       },

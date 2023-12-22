@@ -1,21 +1,16 @@
 ---
 title: REST API
 description: Interact with your Content-Types using the REST API endpoints Strapi generates for you.
-displayed_sidebar: restApiSidebar
-
+# displayed_sidebar: restApiSidebar
 ---
 
 # REST API
 
-The REST API allows accessing the [content-types](/dev-docs/backend-customization/models) through API endpoints. Strapi automatically creates [API endpoints](#endpoints) when a content-type is created. [API parameters](/dev-docs/api/rest/parameters) can be used when querying API endpoints to refine the results.
+**Conventions**
 
-:::note
-All content types are private by default and need to be either made public or queries need to be authenticated with the proper permissions. See the [Quick Start Guide](/dev-docs/quick-start#step-3-set-roles--permissions), the user guide for the [Users & Permissions plugin](/user-docs/users-roles-permissions/configuring-end-users-roles), and [API tokens configuration documentation](/dev-docs/configurations/api-tokens) for more details.
-:::
+The base URL to send all API requests is `https://api.lightup.io.vn`. HTTPS is required for all API requests.
 
-:::caution
-The REST API by default does not populate any relations, media fields, components, or dynamic zones. Use the [`populate` parameter](/dev-docs/api/rest/populate-select) to populate specific fields. Ensure that the find permission is given to the field(s) for the relation(s) you populate.
-:::
+The API follows RESTful conventions when possible, with most operations performed via `GET`, `POST`, `PATCH`, and `DELETE` requests on page and database resources. Request and response bodies are encoded as JSON.
 
 ## Endpoints
 
@@ -30,21 +25,10 @@ For each Content-Type, the following endpoints are automatically generated:
 | `GET`    | `/api/:pluralApiId`             | [Get a list of entries](#get-entries) |
 | `POST`   | `/api/:pluralApiId`             | [Create an entry](#create-an-entry)   |
 | `GET`    | `/api/:pluralApiId/:documentId` | [Get an entry](#get-an-entry)         |
-| `PUT`    | `/api/:pluralApiId/:documentId` | [Update an entry](#update-an-entry)   |
+| `PATCH`  | `/api/:pluralApiId/:documentId` | [Update an entry](#update-an-entry)   |
 | `DELETE` | `/api/:pluralApiId/:documentId` | [Delete an entry](#delete-an-entry)   |
 
 </TabItem>
-
-<TabItem value="single-type" label="Single type">
-
-| Method   | URL                   | Description                                |
-| -------- | --------------------- | ------------------------------------------ |
-| `GET`    | `/api/:singularApiId` | [Get an entry](#get-an-entry)              |
-| `PUT`    | `/api/:singularApiId` | [Update/Create an entry](#update-an-entry) |
-| `DELETE` | `/api/:singularApiId` | [Delete an entry](#delete-an-entry)        |
-
-</TabItem>
-
 </Tabs>
 
 <details>
@@ -55,54 +39,102 @@ For each Content-Type, the following endpoints are automatically generated:
 
 <TabItem value="collection-type" label="Collection type">
 
-`Restaurant` **Content type**
+`Restaurant`
 
-| Method | URL                      | Description               |
-| ------ | ------------------------ | ------------------------- |
-| GET    | `/api/restaurants`       | Get a list of restaurants |
-| POST   | `/api/restaurants`       | Create a restaurant       |
-| GET    | `/api/restaurants/:id`   | Get a specific restaurant |
-| DELETE | `/api/restaurants/:id`   | Delete a restaurant       |
-| PUT    | `/api/restaurants/:id`   | Update a restaurant       |
-
-</TabItem>
-
-<TabItem value="single-type" label="Single type">
-
-`Homepage` **Content type**
-
-| Method | URL             | Description                        |
-| ------ | --------------- | ---------------------------------- |
-| GET    | `/api/homepage` | Get the homepage content           |
-| PUT    | `/api/homepage` | Update/create the homepage content |
-| DELETE | `/api/homepage` | Delete the homepage content        |
+| Method | URL                    | Description               |
+| ------ | ---------------------- | ------------------------- |
+| GET    | `/api/restaurants`     | Get a list of restaurants |
+| POST   | `/api/restaurants`     | Create a restaurant       |
+| GET    | `/api/restaurants/:id` | Get a specific restaurant |
+| PATCH  | `/api/restaurants/:id` | Update a restaurant       |
+| DELETE | `/api/restaurants/:id` | Delete a restaurant       |
 
 </TabItem>
+
 </Tabs>
 </details>
-
-:::note
-[Components](/dev-docs/backend-customization/models#components) don't have API endpoints.
-:::
 
 ## Requests
 
 Requests return a response as an object which usually includes the following keys:
 
-- `data`: the response data itself, which could be:
-  - a single entry, as an object with the following keys:
-    - `id` (number)
-    - `attributes` (object)
-    - `meta` (object)
-  - a list of entries, as an array of objects
-  - a custom response
+- Top-level resources are addressable by a UUIDv4 `"id"` property. You may omit dashes from the ID when making requests to the API, e.g. when copying the ID from a Notion URL.
+- Property names are in `snake_case` (not `camelCase` or `kebab-case`).
+- Temporal values (dates and datetimes) are encoded in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) strings. Datetimes will include the time value (`2020-08-12T02:12:33.231Z`) while dates will include only the date (`2020-08-12`)
+- The Notion API does not support empty strings. To unset a string value for properties like a `url`[Property value object](https://developers.notion.com/reference/property-value-object), for example, use an explicit `null` instead of `""`.
+- Top-level resources have an `"object"` property. This property can be used to determine the type of the resource (e.g. `"data"`)
+- The JSON response format according to your request:
 
-- `meta` (object): information about pagination, publication state, available locales, etc.
+<Tabs groupId="collection-single">
+  <TabItem value="collection-type" label="Get Pagination">
+  <Response>
 
-- `error` (object, _optional_): information about any [error](/dev-docs/error-handling) thrown by the request
+```json
+{
+  "data": {
+    "data": [],
+    "meta": {
+      "total_elements": 10,
+      "total_pages": 5,
+      "page": 1,
+      "page_size": 2,
+      "first": true,
+      "last": false,
+      "next_page": 2,
+      "prev_page": null
+    }
+  },
+  "message": "string",
+  "status_code": 0
+}
+```
+
+  </Response>
+  </TabItem>
+
+  <TabItem value="get-detail" label="Get detail">
+  <Response>
+
+```json
+{
+  "data": {},
+  "message": "string",
+  "status_code": 0
+}
+```
+
+  </Response>
+  </TabItem>
+</Tabs>
 
 :::note
-Some plugins (including Users & Permissions and Upload) may not follow this response format.
+**`"data"`** is the property containing the result data, which can be a string or another value.
+
+**`"message"`** is the property containing a descriptive message about the result.
+
+**`"meta"`** contains pagination information, including total elements, total pages, current page, page size, first and last status, next page, and previous page.
+
+**`"status_code"`** is the property containing the status code, typically used to indicate success (200 could be a success code, while other codes often represent specific errors).
+:::
+
+:::note
+Here's a more detailed description of the fields within the **`"meta"`** object:
+
+**`"total_elements"`**: The total number of elements across all pages.
+
+**`"total_pages"`**: The total number of pages available based on the specified page size.
+
+**`"page"`**: The current page number.
+
+**`"page_size"`**: The number of elements displayed per page.
+
+**`"first"`**: A boolean indicating whether the current page is the first page (true if it is the first page).
+
+**`"last"`**: A boolean indicating whether the current page is the last page (true if it is the last page).
+
+**`"next_page"`**: The page number of the next page. If there is no next page, this may be null.
+
+**`"prev_page"`**: The page number of the previous page. If the current page is the first page, this may be null.
 :::
 
 <SideBySideContainer>
@@ -111,7 +143,7 @@ Some plugins (including Users & Permissions and Upload) may not follow this resp
 
 ### Get entries
 
-Returns entries matching the query filters (see [API parameters](/dev-docs/api/rest/parameters) documentation).
+Returns entries matching the query filters .
 
 </SideBySideColumn>
 
@@ -121,7 +153,7 @@ Returns entries matching the query filters (see [API parameters](/dev-docs/api/r
 
 <Request>
 
-`GET http://localhost:1337/api/restaurants`
+`GET http://localhost:1337/api/restaurants?.....`
 
 </Request>
 
@@ -129,31 +161,33 @@ Returns entries matching the query filters (see [API parameters](/dev-docs/api/r
 
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "attributes": {
+  "data": {
+    "data": [
+      {
+        "id": "d4bf5592-9de2-11ee-b4e9-0242c0a8c002",
         "title": "Restaurant A",
         "description": "Restaurant A's description"
       },
-      "meta": {
-        "availableLocales": []
-      }
-    },
-    {
-      "id": 2,
-      "attributes": {
+      {
+        "id": "147b68c6-9e27-11ee-b43d-0242c0a8d002",
         "title": "Restaurant B",
         "description": "Restaurant B's description"
-      },
-      "meta": {
-        "availableLocales": []
       }
-    },
-  ],
-  "meta": {}
+    ],
+    "meta": {
+      "total_elements": 10,
+      "total_pages": 5,
+      "page": 1,
+      "page_size": 2,
+      "first": true,
+      "last": false,
+      "next_page": 2,
+      "prev_page": null
+    }
+  },
+  "message": "Success",
+  "status_code": "200"
 }
-
 ```
 
 </Response>
@@ -180,7 +214,7 @@ Returns an entry by `id`.
 
 <Request title="Example request">
 
-`GET http://localhost:1337/api/restaurants/1`
+`GET http://localhost:1337/api/restaurants/d4bf5592-9de2-11ee-b4e9-0242c0a8c002`
 
 </Request>
 
@@ -189,18 +223,13 @@ Returns an entry by `id`.
 ```json
 {
   "data": {
-    "id": 1,
-    "attributes": {
-      "title": "Restaurant A",
-      "description": "Restaurant A's description"
-    },
-    "meta": {
-      "availableLocales": []
-    }
+    "id": "d4bf5592-9de2-11ee-b4e9-0242c0a8c002",
+    "title": "Restaurant A",
+    "description": "Restaurant A's description"
   },
-  "meta": {}
+  "message": "Success",
+  "status_code": "200"
 }
-
 ```
 
 </Response>
@@ -218,12 +247,6 @@ Returns an entry by `id`.
 ### Create an entry
 
 Creates an entry and returns its value.
-
-If the [Internationalization (i18n) plugin](/dev-docs/plugins/i18n.md) is installed, it's possible to use POST requests to the REST API to [create localized entries](/dev-docs/plugins/i18n.md#creating-a-new-localized-entry).
-
-:::note
-While creating an entry, you can define its relations and their order (see [Managing relations through the REST API](/dev-docs/api/rest/relations.md) for more details).
-:::
 
 </SideBySideColumn>
 
@@ -257,10 +280,10 @@ While creating an entry, you can define its relations and their order (see [Mana
 {
   "data": {
     "id": 1,
-    "attributes": { … },
-    "meta": {}
+    "attributes": {}
   },
-  "meta": {}
+  "message": "Success",
+  "status_code": "200"
 }
 ```
 
@@ -271,7 +294,6 @@ While creating an entry, you can define its relations and their order (see [Mana
 </SideBySideColumn>
 </SideBySideContainer>
 
-
 <SideBySideContainer>
 
 <SideBySideColumn>
@@ -280,12 +302,7 @@ While creating an entry, you can define its relations and their order (see [Mana
 
 Partially updates an entry by `id` and returns its value.
 
-Fields that aren't sent in the query are not changed in the database. Send a `null` value to clear fields.
-
-:::note NOTES
-* Even with the [Internationalization (i18n) plugin](/dev-docs/plugins/i18n) installed, it's currently not possible to [update the locale of an entry](/dev-docs/plugins/i18n#updating-an-entry).
-* While updating an entry, you can define its relations and their order (see [Managing relations through the REST API](/dev-docs/api/rest/relations.md) for more details).
-:::
+Fields that aren't sent in the query are not changed in the database.
 
 </SideBySideColumn>
 
@@ -295,14 +312,14 @@ Fields that aren't sent in the query are not changed in the database. Send a `nu
 
 <Request title="Example request">
 
-`PUT http://localhost:1337/api/restaurants/1`
+`PATCH http://localhost:1337/api/restaurants/d4bf5592-9de2-11ee-b4e9-0242c0a8c002`
 
 ```json
 {
   "data": {
     "title": "Hello",
     "relation_field_a": 2,
-    "relation_field_b": [2, 4],
+    "relation_field_b": [2, 4]
   }
 }
 ```
@@ -315,10 +332,10 @@ Fields that aren't sent in the query are not changed in the database. Send a `nu
 {
   "data": {
     "id": 1,
-    "attributes": {},
-    "meta": {}
+    "attributes": {}
   },
-  "meta": {}
+  "message": "Success",
+  "status_code": "200"
 }
 ```
 
@@ -343,7 +360,7 @@ Deletes an entry by `id` and returns its value.
 
 <Request title="Example request">
 
-`DELETE http://localhost:1337/api/restaurants/1`
+`DELETE http://localhost:1337/api/restaurants?id=d4bf5592-9de2-11ee-b4e9-0242c0a8c002&id=234sdg92-9de2-11ee-b4e9-0242c0a8c002`
 
 </Request>
 
@@ -351,12 +368,16 @@ Deletes an entry by `id` and returns its value.
 
 ```json
 {
-  "data": {
-    "id": 1,
-    "attributes": {},
-    "meta": {}
-  },
-  "meta": {}
+  "data": [
+    {
+      "id": "d4bf5592-9de2-11ee-b4e9-0242c0a8c002"
+    },
+    {
+      "id": "234sdg92-9de2-11ee-b4e9-0242c0a8c002"
+    }
+  ],
+  "message": "Success",
+  "status_code": "200"
 }
 ```
 

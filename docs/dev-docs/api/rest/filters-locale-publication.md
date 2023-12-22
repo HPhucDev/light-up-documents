@@ -106,16 +106,19 @@ You can use the `$eq` filter operator to find an exact match.
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  filters: {
-    username: {
-      $eq: 'John',
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    filters: {
+      username: {
+        $eq: "John",
+      },
     },
   },
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/users?${query}`);
 ```
@@ -153,21 +156,21 @@ You can use the `$in` filter operator with an array of values to find multiple e
     {
       "id": 3,
       "attributes": {
-        "name": "test3",
+        "name": "test3"
         // ...
       }
     },
     {
       "id": 6,
       "attributes": {
-        "name": "test6",
+        "name": "test6"
         // ...
       }
     },
     {
       "id": 8,
       "attributes": {
-        "name": "test8",
+        "name": "test8"
         // ...
       }
     }
@@ -187,16 +190,19 @@ You can use the `$in` filter operator with an array of values to find multiple e
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  filters: {
-    id: {
-      $in: [3, 6, 8],
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    filters: {
+      id: {
+        $in: [3, 6, 8],
+      },
     },
   },
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/restaurants?${query}`);
 ```
@@ -234,7 +240,7 @@ Complex filtering is combining multiple filters using advanced methods such as c
       "id": 1,
       "attributes": {
         "name": "test1",
-        "date": "2020-01-01",
+        "date": "2020-01-01"
         // ...
       }
     },
@@ -242,7 +248,7 @@ Complex filtering is combining multiple filters using advanced methods such as c
       "id": 2,
       "attributes": {
         "name": "test2",
-        "date": "2020-01-02",
+        "date": "2020-01-02"
         // ...
       }
     }
@@ -262,30 +268,33 @@ Complex filtering is combining multiple filters using advanced methods such as c
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  filters: {
-    $or: [
-      {
-        date: {
-          $eq: '2020-01-01',
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    filters: {
+      $or: [
+        {
+          date: {
+            $eq: "2020-01-01",
+          },
         },
-      },
-      {
-        date: {
-          $eq: '2020-01-02',
+        {
+          date: {
+            $eq: "2020-01-02",
+          },
         },
-      },
-    ],
-    author: {
-      name: {
-        $eq: 'Kai doe',
+      ],
+      author: {
+        name: {
+          $eq: "Kai doe",
+        },
       },
     },
   },
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/books?${query}`);
 ```
@@ -306,7 +315,7 @@ Deep filtering is filtering on a relation's fields.
 
 :::caution
 
-- Querying your API with deep filters may cause performance issues.  If one of your deep filtering queries is too slow, we recommend building a custom route with an optimized version of the query.
+- Querying your API with deep filters may cause performance issues. If one of your deep filtering queries is too slow, we recommend building a custom route with an optimized version of the query.
 - Deep filtering isn't available for polymorphic relations (eg: Dynamic Zones & Media Fields).
 
 :::
@@ -368,20 +377,23 @@ Deep filtering is filtering on a relation's fields.
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  filters: {
-    chef: {
-      restaurants: {
-        stars: {
-          $eq: 5,
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    filters: {
+      chef: {
+        restaurants: {
+          stars: {
+            $eq: 5,
+          },
         },
       },
     },
   },
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/restaurants?${query}`);
 ```
@@ -391,14 +403,7 @@ await request(`/api/restaurants?${query}`);
 </SideBySideColumn>
 </SideBySideContainer>
 
-
 ## Locale
-
-:::prerequisites
-
-- The [Internationalization (i18n) plugin](/dev-docs/plugins/i18n.md) should be installed.
-- [Localization should be enabled for the content-type](/user-docs/content-type-builder/creating-new-content-type.md#creating-a-new-content-type).
-:::
 
 The `locale` API parameter can be used to get entries from a specific locale (see [i18n plugin documentation](/dev-docs/plugins/i18n.md#getting-localized-entries-with-the-locale-parameter)).
 
@@ -465,12 +470,15 @@ Queries can accept a `publicationState` parameter to fetch entries based on thei
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  publicationState: 'preview',
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    publicationState: "preview",
+  },
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/articles?${query}`);
 ```
@@ -489,17 +497,20 @@ To retrieve only draft entries, combine the `preview` publication state and the 
 <summary><QsForQueryTitle /></summary>
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  publicationState: 'preview',
-  filters: {
-    publishedAt: {
-      $null: true,
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    publicationState: "preview",
+    filters: {
+      publishedAt: {
+        $null: true,
+      },
     },
   },
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/articles?${query}`);
 ```

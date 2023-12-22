@@ -1,7 +1,7 @@
 ---
 title: Interactive Query Builder
 description: Use an interactive tool that leverages the querystring library to build your query URL
-displayed_sidebar: restApiSidebar
+# displayed_sidebar: restApiSidebar
 ---
 
 # Build your query URL with Strapi's interactive tool
@@ -22,9 +22,8 @@ Please refer to the [REST API parameters table](/dev-docs/api/rest/parameters) a
 <br />
 
 <InteractiveQueryBuilder
-  endpoint="/api/books"
-  code={`
-{
+endpoint="/api/books"
+code={`{
   sort: ['title:asc'],
   filters: {
     title: {
@@ -44,7 +43,7 @@ Please refer to the [REST API parameters table](/dev-docs/api/rest/parameters) a
   publicationState: 'live',
   locale: ['en'],
 }
-  `}
+ `}
 />
 
 <br />
@@ -57,6 +56,7 @@ The default endpoint path is prefixed with `/api/` and should be kept as-is unle
 
 :::caution Disclaimer
 The `qs` library and the interactive query builder provided on this page:
+
 - might not detect all syntax errors,
 - are not aware of the parameters and values available in a Strapi project,
 - and do not provide autocomplete features.

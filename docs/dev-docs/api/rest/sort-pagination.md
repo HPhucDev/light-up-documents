@@ -2,7 +2,7 @@
 title: Sort and Pagination
 description: Use Strapi's REST API to sort or paginate your data.
 sidebarDepth: 3
-displayed_sidebar: restApiSidebar
+# displayed_sidebar: restApiSidebar
 ---
 
 import QsIntroFull from '/docs/snippets/qs-intro-full.md'
@@ -18,7 +18,6 @@ Entries that are returned by queries to the [REST API](/dev-docs/api/rest) can b
 <QsIntroFull />
 
 :::
-
 
 ## Sorting
 
@@ -61,7 +60,7 @@ You can sort by multiple fields by passing fields in a `sort` array.
       "id": 1,
       "attributes": {
         "title": "Test Article",
-        "slug": "test-article",
+        "slug": "test-article"
         // ...
       }
     },
@@ -69,7 +68,7 @@ You can sort by multiple fields by passing fields in a `sort` array.
       "id": 2,
       "attributes": {
         "title": "Test Article",
-        "slug": "test-article-1",
+        "slug": "test-article-1"
         // ...
       }
     }
@@ -89,12 +88,15 @@ You can sort by multiple fields by passing fields in a `sort` array.
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  sort: ['title', 'slug'],
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    sort: ["title", "slug"],
+  },
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/articles?${query}`);
 ```
@@ -109,7 +111,7 @@ await request(`/api/articles?${query}`);
 
 ### Example: Sort using 2 fields and set the order
 
-Using the `sort` parameter and defining `:asc` or  `:desc` on sorted fields, you can get results sorted in a particular order.
+Using the `sort` parameter and defining `:asc` or `:desc` on sorted fields, you can get results sorted in a particular order.
 
 </SideBySideColumn>
 
@@ -133,7 +135,7 @@ Using the `sort` parameter and defining `:asc` or  `:desc` on sorted fields, you
       "id": 2,
       "attributes": {
         "title": "Test Article",
-        "slug": "test-article-1",
+        "slug": "test-article-1"
         // ...
       }
     },
@@ -141,7 +143,7 @@ Using the `sort` parameter and defining `:asc` or  `:desc` on sorted fields, you
       "id": 1,
       "attributes": {
         "title": "Test Article",
-        "slug": "test-article",
+        "slug": "test-article"
         // ...
       }
     }
@@ -162,12 +164,15 @@ Using the `sort` parameter and defining `:asc` or  `:desc` on sorted fields, you
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  sort: ['title:asc', 'slug:desc'],
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    sort: ["title:asc", "slug:desc"],
+  },
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/articles?${query}`);
 ```
@@ -187,8 +192,6 @@ Queries can accept `pagination` parameters. Results can be paginated:
 :::note
 Pagination methods can not be mixed. Always use either `page` with `pageSize` **or** `start` with `limit`.
 :::
-
-
 
 ### Pagination by page
 
@@ -246,15 +249,18 @@ Using the `pagination[page]` and `pagination[pageSize]` parameters you can get r
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  pagination: {
-    page: 1,
-    pageSize: 10,
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    pagination: {
+      page: 1,
+      pageSize: 10,
+    },
   },
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/articles?${query}`);
 ```
@@ -264,14 +270,13 @@ await request(`/api/articles?${query}`);
 </SideBySideColumn>
 </SideBySideContainer>
 
-
 ### Pagination by offset
 
 To paginate results by offset, use the following parameters:
 
 | Parameter               | Type    | Description                                                    | Default |
 | ----------------------- | ------- | -------------------------------------------------------------- | ------- |
-| `pagination[start]`     | Integer | Start value (i.e. first entry to return)                      | 0       |
+| `pagination[start]`     | Integer | Start value (i.e. first entry to return)                       | 0       |
 | `pagination[limit]`     | Integer | Number of entries to return                                    | 25      |
 | `pagination[withCount]` | Boolean | Toggles displaying the total number of entries to the response | `true`  |
 
@@ -324,15 +329,18 @@ Using the `pagination[start]` and `pagination[limit]` parameters you can get res
 <QsForQueryBody />
 
 ```js
-const qs = require('qs');
-const query = qs.stringify({
-  pagination: {
-    start: 0,
-    limit: 10,
+const qs = require("qs");
+const query = qs.stringify(
+  {
+    pagination: {
+      start: 0,
+      limit: 10,
+    },
   },
-}, {
-  encodeValuesOnly: true, // prettify URL
-});
+  {
+    encodeValuesOnly: true, // prettify URL
+  }
+);
 
 await request(`/api/articles?${query}`);
 ```

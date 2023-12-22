@@ -81,7 +81,7 @@ export default function PageHome() {
             <HeroDescription>{content.page.description}</HeroDescription>
           </Container>
         </Hero>
-        <section id="homeCarousel" className={styles.home__carousel}>
+        {/* <section id="homeCarousel" className={styles.home__carousel}>
           <Container>
             <Carousel>
               {content.carousel.map(
@@ -124,7 +124,7 @@ export default function PageHome() {
               )}
             </Carousel>
           </Container>
-        </section>
+        </section> */}
         <section id="homeCategories" className={styles.home__categories}>
           <Container>
             <div className="row row--huge">
@@ -144,7 +144,7 @@ export default function PageHome() {
                       key={`pageHomeCategoryItem${categoryItemIndex}`}
                       className={clsx(
                         "col",
-                        "col--6",
+                        "col--12",
                         styles.home__categories__item
                       )}
                     >

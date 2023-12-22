@@ -1,7 +1,7 @@
 ---
 title: Relations
 description: Use the REST API to manage the order of relations
-displayed_sidebar: restApiSidebar
+# displayed_sidebar: restApiSidebar
 ---
 
 # Managing relations through the REST API
@@ -12,11 +12,11 @@ Relations between content-types can be managed through the [admin panel](/user-d
 
 Relations can be connected, disconnected or set through the Content API by passing parameters in the body of the request:
 
-|  Parameter name | Description | Type of update |
-|-----------------|------------------|----------------|
-| [`connect`](#connect)       | Connects new entities.<br /><br />Can be used in combination with `disconnect`.<br /><br />Can be used with [positional arguments](#relations-reordering) to define an order for relations.    | Partial
-| [`disconnect`](#disconnect)    | Disconnects entities.<br /><br />Can be used in combination with `connect`. | Partial
-| [`set`](#set)           | Set entities to a specific set. Using `set` will overwrite all existing connections to other entities.<br /><br />Cannot be used in combination with `connect` or `disconnect`.  | Full
+| Parameter name              | Description                                                                                                                                                                                 | Type of update |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| [`connect`](#connect)       | Connects new entities.<br /><br />Can be used in combination with `disconnect`.<br /><br />Can be used with [positional arguments](#relations-reordering) to define an order for relations. | Partial        |
+| [`disconnect`](#disconnect) | Disconnects entities.<br /><br />Can be used in combination with `connect`.                                                                                                                 | Partial        |
+| [`set`](#set)               | Set entities to a specific set. Using `set` will overwrite all existing connections to other entities.<br /><br />Cannot be used in combination with `connect` or `disconnect`.             | Full           |
 
 ## `connect`
 
@@ -24,10 +24,10 @@ Using `connect` in the body of a request performs a partial update, connecting t
 
 `connect` accepts either a shorthand or a longhand syntax. In the following examples, numbers refers to entity ids:
 
-| Syntax type | Syntax example |
-| ------------|----------------|
-| shorthand   | `connect: [2, 4]`
-| longhand    | ```connect: [{ id: 2 }, { id: 4 }]``` |
+| Syntax type | Syntax example                    |
+| ----------- | --------------------------------- |
+| shorthand   | `connect: [2, 4]`                 |
+| longhand    | `connect: [{ id: 2 }, { id: 4 }]` |
 
 You can also use the longhand syntax to [reorder relations](#relations-reordering).
 
@@ -50,9 +50,9 @@ Sending the following request updates the `restaurant` entity with `id` `1`, usi
 
 ```json
 {
-  data: {
-    categories: {
-      connect: [2, 4]
+  "data": {
+    "categories": {
+      "connect": [2, 4]
     }
   }
 }
@@ -63,21 +63,18 @@ Sending the following request updates the `restaurant` entity with `id` `1`, usi
 <MultiLanguageSwitcherRequest language="Node">
 
 ```js
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 
-const response = await fetch(
-  'http://localhost:1337/api/restaurants/1',
-  {
-    method: 'put',
-    body: {
-      data: {
-        categories: {
-          connect: [2, 4]
-        }
-      }
-    }
-  }
-);
+const response = await fetch("http://localhost:1337/api/restaurants/1", {
+  method: "put",
+  body: {
+    data: {
+      categories: {
+        connect: [2, 4],
+      },
+    },
+  },
+});
 ```
 
 </MultiLanguageSwitcherRequest>
@@ -96,12 +93,9 @@ Sending the following request updates the `restaurant` entity with `id` `1`, usi
 
 ```json
 {
-  data: {
-    categories: {
-      connect: [
-        { id: 2 },
-        { id: 4 }
-      ]
+  "data": {
+    "categories": {
+      "connect": [{ "id": 2 }, { "id": 4 }]
     }
   }
 }
@@ -112,24 +106,18 @@ Sending the following request updates the `restaurant` entity with `id` `1`, usi
 <MultiLanguageSwitcherRequest language="Node">
 
 ```js
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 
-const response = await fetch(
-  'http://localhost:1337/api/restaurants/1',
-  {
-    method: 'put',
-    body: {
-      data: {
-        categories: {
-          connect: [
-            { id: 2 },
-            { id: 4 }
-          ]
-        }
-      }
-    }
-  }
-);
+const response = await fetch("http://localhost:1337/api/restaurants/1", {
+  method: "put",
+  body: {
+    data: {
+      categories: {
+        connect: [{ id: 2 }, { id: 4 }],
+      },
+    },
+  },
+});
 ```
 
 </MultiLanguageSwitcherRequest>
@@ -188,11 +176,9 @@ Sending the following request updates the `restaurant` entity with `id` `1`, con
 
 ```json
 {
-  data: {
-    categories: {
-      connect: [
-        { id: 3, position: { before: 2 } },
-      ]
+  "data": {
+    "categories": {
+      "connect": [{ "id": 3, "position": { "before": 2 } }]
     }
   }
 }
@@ -220,14 +206,14 @@ Sending the following example in the request body of a PUT request updates multi
 
 ```json
 {
-  data: {
-    categories: {
-      connect: [
-        { id: 6, position: { after: 1} },
-        { id: 7, position: { before: 2 } },
-        { id: 8, position: { end: true } },
-        { id: 9 },
-        { id: 10, position: { start: true } },
+  "data": {
+    "categories": {
+      "connect": [
+        { "id": 6, "position": { "after": 1 } },
+        { "id": 7, "position": { "before": 2 } },
+        { "id": 8, "position": { "end": true } },
+        { "id": 9 },
+        { "id": 10, "position": { "start": true } }
       ]
     }
   }
@@ -260,10 +246,10 @@ Using `disconnect` in the body of a request performs a partial update, disconnec
 
 `disconnect` accepts either a shorthand or a longhand syntax. In the following examples, numbers refers to entity ids:
 
-| Syntax type | Syntax example |
-| ------------|----------------|
-| shorthand   | `disconnect: [2, 4]`
-| longhand    | ```disconnect: [{ id: 2 }, { id: 4 }]``` |
+| Syntax type | Syntax example                       |
+| ----------- | ------------------------------------ |
+| shorthand   | `disconnect: [2, 4]`                 |
+| longhand    | `disconnect: [{ id: 2 }, { id: 4 }]` |
 
 `disconnect` can be used in combination with [`connect`](#connect).
 
@@ -281,9 +267,9 @@ Sending the following request updates the `restaurant` entity with `id` `1`, dis
 
 ```json
 {
-  data: {
-    categories: {
-      disconnect: [2, 4],
+  "data": {
+    "categories": {
+      "disconnect": [2, 4]
     }
   }
 }
@@ -303,12 +289,9 @@ Sending the following request updates the `restaurant` entity with `id` `1`, dis
 
 ```json
 {
-  data: {
-    categories: {
-      disconnect: [
-        { id: 2 },
-        { id: 4 }
-      ],
+  "data": {
+    "categories": {
+      "disconnect": [{ "id": 2 }, { "id": 4 }]
     }
   }
 }
@@ -325,10 +308,10 @@ Using `set` performs a full update, replacing all existing relations with the on
 
 `set` accepts a shorthand or a longhand syntax. In the following examples, numbers refers to entity ids:
 
-| Syntax type | Syntax example                  |
-| ----------- | ------------------------------- |
-| shorthand   | `set: [2, 4]`                   |
-| longhand    | ```set: [{ id: 2 }, { id: 4 }]``` |
+| Syntax type | Syntax example                |
+| ----------- | ----------------------------- |
+| shorthand   | `set: [2, 4]`                 |
+| longhand    | `set: [{ id: 2 }, { id: 4 }]` |
 
 As `set` replaces all existing relations, it should not be used in combination with other parameters. To perform a partial update, use [`connect`](#connect) and [`disconnect`](#disconnect).
 
@@ -353,9 +336,9 @@ Sending the following request updates the `restaurant` entity with `id` `1`, rep
 
 ```json
 {
-  data: {
-    categories: {
-      set: [2, 4],
+  "data": {
+    "categories": {
+      "set": [2, 4]
     }
   }
 }
@@ -375,12 +358,9 @@ Sending the following request updates the `restaurant` entity with `id` `1`, rep
 
 ```json
 {
-  data: {
-    categories: {
-      set: [
-        { id: 2 },
-        { id: 4 }
-      ],
+  "data": {
+    "categories": {
+      "set": [{ "id": 2 }, { "id": 4 }]
     }
   }
 }
